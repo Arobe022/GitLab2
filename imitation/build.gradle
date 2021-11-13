@@ -1,9 +1,11 @@
 plugins {
    id 'java'
    id 'org.xbib.gradle.plugin.git' version '2.0.0'
+   id 'org.jbake.site' version '5.5.0'
    id 'project-report'
    id 'org.hidetake.ssh' version '2.9.0'
 }
+
 
 java {
     sourceCompatibility = JavaVersion.toVersion(11)
@@ -19,15 +21,59 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-library:2.2'
 }
 
+
 test {
     ignoreFailures = true
     useJUnitPlatform()
 }
+ test.ignoreFailures=true
+check.dependsOn htmlDependencyReport
+
+task reports (dependsOn: ['javadoc', 'check']) {
+    description 'Generate all reports for this project'
+}
+
+
+task copyJDocs (type: Copy) {
+     from 'build/docs'
+    into 'build/tmp/website/assets'
+    dependsOn 'javadoc'
+}
+
+task copyReports (type: Copy) {
+     from 'build/reports'
+    into 'build/tmp/website/assets'
+    dependsOn 'reports'
+}
+task copyJbakeTemplates (type: Copy) {
+     from 'src/jbake'
+    into 'build/tmp/website'
+}
+
+task buildHomePage (dependsOn: copyJbakeTemplates) {
+	 inputs.files ( 'build/tmp/website/content/home.md', '../README.md')
+	 outputs.file ( 'build/tmp/website/content/home.md' )
+	 doLast  {
+	     outputs.files.singleFile.withOutputStream { out ->
+	         for ( file in inputs.files ) file.withInputStream {
+		 	     out << it << '\n' }
+	    }
+	 }
+}
+
+jbake {
+	 srcDirName = "build/tmp/website"
+}
+
+task setupWebsite (dependsOn: ['buildHomePage', 'copyReports', 'copyJDocs']){
+}
+
+
 task clonePages() {
     doLast {
         mkdir 'build/gh-pages'
         def thisRepo = "/home/cs_arobe022/CS350/GitLab2"
-        def pagesDir = "$buildDir/gh-pages"
+        def pagesDir = "$buildDir/gh-pages/"
             project.delete {
             delete pagesDir
         }
@@ -38,26 +84,28 @@ task clonePages() {
             remote='git@github.com:Arobe022/GitLab2.git'
             bare = false
             refToCheckout = 'gh-pages'
-        }
-        System.out.println(dir);
+             System.out.println(dir);
         System.out.println(uri);
         System.out.println(remote);
         System.out.println(refToCheckout);
+        }
+       /* System.out.println(dir);
+        System.out.println(uri);
+        System.out.println(remote);
+        System.out.println(refToCheckout);*/
         grgit.checkout {
             branch = 'gh-pages'
         }
 
     }
 }
-task reports (dependsOn:['javadoc','test']){
-	description 'Generate all reports for this project'
-}
-task copyReports (type: Copy, dependsOn: ['reports','clonePages']) {  
+
+/*task copyReports (type: Copy, dependsOn: ['reports','clonePages']) {  
     from "$buildDir/reports"
     into "$buildDir/gh-pages"
      from "$buildDir/docs"
     into "$buildDir/gh-pages"
-}
+}*/
 
 task deployReports (dependsOn:'copyReports') {
     group = "Reporting"
@@ -69,12 +117,10 @@ task deployReports (dependsOn:'copyReports') {
         }
         grgit.add (update: false, patterns: ['reports/'])
         grgit.add (update: true, patterns: ['reports/'])
-                grgit.add (update: false, patterns: ['docs/'])
-        grgit.add (update: true, patterns: ['docs/'])
         grgit.commit {
             message = "Updating web pages"
         }
         grgit.push {}
     }
 }
-
+bake.dependsOn "setupWebsite"
