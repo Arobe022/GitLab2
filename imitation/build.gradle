@@ -68,6 +68,9 @@ jbake {
 task setupWebsite (dependsOn: ['buildHomePage', 'copyReports', 'copyJDocs']){
 }
 
+/*task reports (dependsOn: ['javadoc', 'test']) {
+    description 'Generate all reports for this project'
+}*/
 
 task clonePages() {
     doLast {
@@ -78,9 +81,9 @@ task clonePages() {
             delete pagesDir
         }
 
-        def grgit = git.clone {
+         git.clone {
             dir = pagesDir
-            uri ='file:' + thisRepo//'https://github.com/Arobe022/GitLab2.git'
+            uri = thisRepo//'https://github.com/Arobe022/GitLab2.git'
             remote='git@github.com:Arobe022/GitLab2.git'
             bare = false
             refToCheckout = 'gh-pages'
@@ -89,7 +92,7 @@ task clonePages() {
         System.out.println(remote);
         System.out.println(refToCheckout);
         }
-       /* System.out.println(dir);
+       /*System.out.println(dir);
         System.out.println(uri);
         System.out.println(remote);
         System.out.println(refToCheckout);*/
@@ -101,9 +104,7 @@ task clonePages() {
 }
 
 /*task copyReports (type: Copy, dependsOn: ['reports','clonePages']) {  
-    from "$buildDir/reports"
-    into "$buildDir/gh-pages"
-     from "$buildDir/docs"
+     from "$buildDir/reports"
     into "$buildDir/gh-pages"
 }*/
 
@@ -123,4 +124,4 @@ task deployReports (dependsOn:'copyReports') {
         grgit.push {}
     }
 }
-bake.dependsOn "setupWebsite"
+//bake.dependsOn "setupWebsite"
