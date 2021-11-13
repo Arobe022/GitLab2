@@ -34,19 +34,15 @@ task clonePages() {
 
         def grgit = git.clone {
             dir = pagesDir
-            System.out.println(pagesDir);
-            uri =thisRepo//'https://github.com/Arobe022/GitLab2.git'
-            System.out.println(thisRepo);
+            uri ='file:' + thisRepo//'https://github.com/Arobe022/GitLab2.git'
             remote='git@github.com:Arobe022/GitLab2.git'
-            System.out.println(remote);
             bare = false
             refToCheckout = 'gh-pages'
-            System.out.println(refToCheckout);
-            
-
-        //System.out.println(pagesDir);
         }
-
+        System.out.println(dir);
+        System.out.println(uri);
+        System.out.println(remote);
+        System.out.println(refToCheckout);
         grgit.checkout {
             branch = 'gh-pages'
         }
