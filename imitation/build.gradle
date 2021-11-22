@@ -79,7 +79,7 @@ task reports (dependsOn: ['javadoc', 'test']) {
 task clonePages() {
     doLast {
         mkdir 'build/gh-pages'
-        def thisRepo = "/home/cs_arobe022/CS350/GitLab2"
+        def thisRepo = "$buildDir/../.."
         def pagesDir = "$buildDir/gh-pages"
             project.delete {
             delete pagesDir
@@ -88,7 +88,7 @@ task clonePages() {
          def grgit = git.clone {
             dir = pagesDir
             uri = thisRepo//'https://github.com/Arobe022/GitLab2.git'
-            remote='git@github.com:Arobe022/GitLab2.git'
+            //remote='git@github.com:Arobe022/GitLab2.git'
             bare = false
             refToCheckout = 'gh-pages'
             
@@ -126,4 +126,4 @@ task deployReports (dependsOn:'copyReports') {
         grgit.push {}
     }
 }
-bake.dependsOn "setupWebsite"
+//bake.dependsOn "setupWebsite"
