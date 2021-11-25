@@ -105,8 +105,13 @@ task clonePages() {
 }
 
 task copyReports (type: Copy, dependsOn: ['reports','clonePages']) {  
-     from "$buildDir/reports"
-    into "$buildDir/gh-pages"
+   doLast {
+
+                     ant.move file: "${buildDir}/reports",
+
+                                         todir: "${buildDir}/toArchive"
+
+                 }
 }
 
 task deployReports (dependsOn:'copyReports') {
