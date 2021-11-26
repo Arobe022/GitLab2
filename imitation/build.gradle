@@ -100,6 +100,7 @@ task clonePages() {
         grgit.checkout {
             branch = 'gh-pages'
         }
+        grgit.close()
 
     }
 }
@@ -129,6 +130,7 @@ task deployReports (dependsOn:'copyReports') {
             message = "Updating web pages"
         }
         grgit.push {}
+        grgit.close()
     }
 }
 //bake.dependsOn "setupWebsite"
