@@ -26,10 +26,10 @@ test {
     ignoreFailures = true
     useJUnitPlatform()
 }
-/* test.ignoreFailures=true
+test.ignoreFailures=true
 check.dependsOn htmlDependencyReport
 
-task reports (dependsOn: ['javadoc', test']) {
+task reports (dependsOn: ['javadoc', 'check']) {
     description 'Generate all reports for this project'
 }
 
@@ -67,13 +67,12 @@ jbake {
 
 task setupWebsite (dependsOn: ['buildHomePage', 'copyReports', 'copyJDocs']){
 }
+bake.dependsOn "setupWebsite"
 
 /*task reports (dependsOn: ['javadoc', 'test']) {
     description 'Generate all reports for this project'
 }*/
-task reports (dependsOn: ['javadoc', 'test']) {
-    description 'Generate all reports for this project'
-}
+
 
 
 task clonePages() {
@@ -105,20 +104,22 @@ task clonePages() {
     }
 }
 
-task copyReports (type: Copy, dependsOn: ['reports','clonePages']) {  
+task copyReport(type: Copy, dependsOn: ['bake','clonePages']) {  
    doLast {
-
-						ant.move file: "${buildDir}/docs",
+			ant.copy(todir: 'build/gh-pages'){
+				fileset(dir: 'build/jbake')
+				}
+						/*ant.move file: "${buildDir}/docs",
 
                      todir: "${buildDir}/gh-pages"
                      ant.move file: "${buildDir}/reports",
 
-                     todir: "${buildDir}/gh-pages"
+                     todir: "${buildDir}/gh-pages"*/
 
                  }
 }
 
-task deployReports (dependsOn:'copyReports') {
+task deployReports (dependsOn:'copyReport') {
     group = "Reporting"
     description  'Copies reports to the gh-pages branch in preparation for a future push to GitHub'
     doLast {
@@ -129,8 +130,8 @@ task deployReports (dependsOn:'copyReports') {
         }
         grgit.add (update: false, patterns: ['reports/'])
         grgit.add (update: true, patterns: ['reports/'])
-         grgit.add (update: false, patterns: ['docs/'])
-        grgit.add (update: true, patterns: ['docs/'])
+         //grgit.add (update: false, patterns: ['docs/'])
+        //grgit.add (update: true, patterns: ['docs/'])
         grgit.commit {
             message = "Updating web pages"
         }
@@ -138,4 +139,4 @@ task deployReports (dependsOn:'copyReports') {
         grgit.close()
     }
 }
-//bake.dependsOn "setupWebsite"
+
