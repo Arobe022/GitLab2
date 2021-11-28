@@ -106,18 +106,14 @@ task clonePages() {
 
 task copyReport(type: Copy, dependsOn: ['reports','clonePages']) {  
    doLast {
-			ant.copy(todir: 'build/gh-pages'){
-				fileset(dir: 'build/jbake')
-				}
-				/*ant.copy(todir: 'build/reports'){
-				fileset(dir: 'build/gh-pages')
-				}
-						/*ant.move file: "${buildDir}/docs",
+
+
+						ant.move file: "${buildDir}/docs",
 
                      todir: "${buildDir}/gh-pages"
                      ant.move file: "${buildDir}/reports",
 
-                     todir: "${buildDir}/gh-pages"*/
+                     todir: "${buildDir}/gh-pages"
 
                  }
 }
