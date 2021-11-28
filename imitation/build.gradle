@@ -104,7 +104,7 @@ task clonePages() {
     }
 }
 
-task copyReport(type: Copy, dependsOn: ['bake','clonePages']) {  
+task copyReport(type: Copy, dependsOn: ['report','clonePages']) {  
    doLast {
 			ant.copy(todir: 'build/gh-pages'){
 				fileset(dir: 'build/jbake')
