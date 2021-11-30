@@ -134,10 +134,10 @@ task deployReports (dependsOn:'copyReport') {
             message = "Updating web pages"
         }
         grgit.push {}
-        exec {
+       /* exec {
             workingDir = 'build/gh-pages'
-            commandLine = ['git', 'push','origin','gh-pages']
-        }
+            commandLine = ['git', 'push','--all']
+        }*/
         grgit.close()
     }
 }
