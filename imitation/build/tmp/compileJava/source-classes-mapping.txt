@@ -1,4 +1,0 @@
-main/java/Vocabulary.java
- main.java.Vocabulary
-main/java/Author.java
- main.java.Author

@@ -1,8 +1,0 @@
--classpath '/home/cs_arobe022/CS350/GitLab2/imitation/build/classes/java/main:/home/cs_arobe022/CS350/GitLab2/imitation/build/resources/main'
--d '/home/cs_arobe022/CS350/GitLab2/imitation/build/docs/javadoc'
--doctitle 'imitation API'
--notimestamp 
--quiet 
--windowtitle 'imitation API'
-'/home/cs_arobe022/CS350/GitLab2/imitation/src/main/java/main/java/Author.java'
-'/home/cs_arobe022/CS350/GitLab2/imitation/src/main/java/main/java/Vocabulary.java'
