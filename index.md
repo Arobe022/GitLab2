@@ -2,5 +2,5 @@
 
 Autumn Roberts
 
-* [Tests](./reports/tests/test/)
-* [JavaDoc](./docs/javadoc/)
+* [Tests](./tests/test/)
+* [JavaDoc](./javadoc/)
