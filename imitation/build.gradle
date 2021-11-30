@@ -104,16 +104,15 @@ task clonePages() {
     }
 }
 
-task copyReport(type: Copy, dependsOn: ['reports','clonePages']) {  
+task copyReport(dependsOn: ['reports','clonePages']) {  
    doLast {
 
 
-						ant.move file: "${buildDir}/docs",
-
-                     todir: "${buildDir}/gh-pages"
-                     ant.move file: "${buildDir}/reports",
-
-                     todir: "${buildDir}/gh-pages"
+	ant.copy(  todir: "${buildDir}/gh-pages"){
+		   fileset(dir: "${buildDir}/docs")}
+         ant.copy( todir: "${buildDir}/gh-pages"){
+         	   fileset(dir: "${buildDir}/reports")}
+		     
 
                  }
 }
@@ -127,10 +126,10 @@ task deployReports (dependsOn:'copyReport') {
             dir = pagesDir + "/.git"
             
         }
-        grgit.add (update: false, patterns: ['reports/'])
-        grgit.add (update: true, patterns: ['reports/'])
-         grgit.add (update: false, patterns: ['docs/'])
-        grgit.add (update: true, patterns: ['docs/'])
+        grgit.add (update: false, patterns: ['javadoc/'])
+        grgit.add (update: true, patterns: ['javadoc/'])
+         grgit.add (update: false, patterns: ['tests/'])
+        grgit.add (update: true, patterns: ['tests/'])
         grgit.commit {
             message = "Updating web pages"
         }
